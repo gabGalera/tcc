@@ -7,7 +7,7 @@ const saveAPage = async ({
   city, 
 }) => {
   await page.goto(`https://www.tripadvisor.com${endpoint}`,
-    {waitUntil: "domcontentloaded", timeout: 100000}
+    {waitUntil: "domcontentloaded", timeout: 1000000}
   );
   
   const data = await page.content({"waitUntil": "domcontentloaded"});

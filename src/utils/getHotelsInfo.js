@@ -4,12 +4,12 @@ const { saveAPage } = require('./saveAPage');
 require('dotenv').config();
 
 const run = async () => {
-    let urls = fs.readFileSync("src/data/urls.json");
+    let urls = fs.readFileSync("src/pages/urls/florianopolis.json");
     urls = JSON.parse(urls);
     urls = urls.array;
 
-    const total = urls.length;
-    let count = 374;
+    const total = urls.slice(0, 3).length;
+    let count = 0;
     
     while(count < total) {
         const blockedResourceTypes = [
@@ -23,9 +23,9 @@ const run = async () => {
             'texttrack',
             'stylesheet',
         ];
-        const username = process.env.USERNAME;
+        const username = process.env.USERNAME_SCRAPE;
         // const password = "geoCode=us";
-        const address = process.env.ADDRESS;
+        const address = process.env.ADDRESS_SCRAPE;
         // const address = "186.251.255.141:31337"
     
     
@@ -47,14 +47,13 @@ const run = async () => {
             request.continue();
         }
         });
-    
         await page.authenticate({username});
 
         await saveAPage({ 
             page, 
             endpoint: urls[count],
             folder: "hotels",
-            city: "curitiba", 
+            city: "florianopolis", 
         })
 
         await browser.close();
@@ -63,4 +62,4 @@ const run = async () => {
     }
 }
 
-run();
+await run();

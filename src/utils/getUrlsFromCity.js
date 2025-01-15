@@ -27,7 +27,9 @@ const run = () => {
             values.push(elem.href);
         });
         
-        values = values.filter((value) => !value.includes("#REVIEWS") && value.includes("Curitiba"));
+        console.log(values)
+
+        values = values.filter((value) => !value.includes("#REVIEWS") && value.includes("Florianopolis"));
         urls.array = [...urls.array, ...values]
         urls.array = [...new Set(urls.array)];
         
@@ -41,9 +43,9 @@ const run = () => {
         
         // console.log("length: ", urls.array.length);
         console.log(total, counter);
+        fs.writeFileSync(`src/data/florianoplis.json`, JSON.stringify(urls));
         counter += 30
     }
-    fs.writeFileSync("src/data/urls.json", JSON.stringify(urls));
 }
 
 run()
