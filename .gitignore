@@ -2,3 +2,5 @@ node_modules
 temp
 .env
 ./hn.png
+src/pages/
+src/data/
