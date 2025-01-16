@@ -12,10 +12,10 @@ const run = () => {
     while(total - counter > 0) {
         let data = "";
         if(counter === 0) {
-            data = fs.readFileSync("src/pages/cities/florianopolis/Hotels-g303576-Florianopolis_State_of_Santa_Catarina-Hotels.txt");
+            data = fs.readFileSync("src/pages/cities/portoAlegre/Hotels-g303546-Porto_Alegre_State_of_Rio_Grande_do_Sul-Hotels.txt");
         } else {
             //
-            data = fs.readFileSync(`src/pages/cities/florianopolis/Hotels-g303576-oa${counter}-Florianopolis_State_of_Santa_Catarina-Hotels.txt`);
+            data = fs.readFileSync(`src/pages/cities/portoAlegre/Hotels-g303546-oa${counter}-Porto_Alegre_State_of_Rio_Grande_do_Sul-Hotels.txt`);
         }
         data = data.toString();
         
@@ -29,7 +29,7 @@ const run = () => {
         
         console.log(values)
 
-        values = values.filter((value) => !value.includes("#REVIEWS") && value.includes("Florianopolis"));
+        values = values.filter((value) => !value.includes("#REVIEWS") && value.includes("Porto_Alegre"));
         urls.array = [...urls.array, ...values]
         urls.array = [...new Set(urls.array)];
         
@@ -43,7 +43,7 @@ const run = () => {
         
         // console.log("length: ", urls.array.length);
         console.log(total, counter);
-        fs.writeFileSync(`src/data/florianoplis.json`, JSON.stringify(urls));
+        fs.writeFileSync(`src/data/portoAlegre.json`, JSON.stringify(urls));
         counter += 30
     }
 }

@@ -1,19 +1,19 @@
 const fs = require('fs');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-const { Sequelize, DataTypes } = require('sequelize');
+// const { Sequelize, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize();
+// const sequelize = new Sequelize();
 
-const Hotel = sequelize.define('Hotel', {
-    hotelName: DataTypes.STRING,
-    location: DataTypes.NUMBER,
-    rooms: DataTypes.NUMBER,
-    value: DataTypes.NUMBER,
-    cleanliness: DataTypes.NUMBER,
-    service: DataTypes.NUMBER,
-    sleepQuality: DataTypes.NUMBER
-});
+// const Hotel = sequelize.define('Hotel', {
+//     hotelName: DataTypes.STRING,
+//     location: DataTypes.NUMBER,
+//     rooms: DataTypes.NUMBER,
+//     value: DataTypes.NUMBER,
+//     cleanliness: DataTypes.NUMBER,
+//     service: DataTypes.NUMBER,
+//     sleepQuality: DataTypes.NUMBER
+// });
 
 const parseInfo = async () => {
     let urls = fs.readFileSync("src/data/urls.json");
@@ -24,7 +24,7 @@ const parseInfo = async () => {
     let hotelName = ""
     const test = urls[0].replace(".html", ".txt");
     console.log(test);
-    let data = fs.readFileSync(`src/pages/hotels/curitiba${test}`);
+    let data = fs.readFileSync(`src/pages/hotels/florianopolis${test}`);
     data = data.toString();
     
     const dom = new JSDOM(data);
@@ -46,29 +46,26 @@ const parseInfo = async () => {
         hotelName = elem.textContent.replace("If you own this business, claim it for free now to update business info, respond to reviews, and more.Claim this listing", "");
     });
 
-    const result = {
-        hotelName,
-        service: DataTypes.NUMBER,
-        sleepQuality: DataTypes.NUMBER
-    }
-
+    const result = {};
+    result.hotelName = hotelName;
+    
     Object.keys(content).forEach((key) => {
         if (key === "Location") {
-            result.location = content[key]
+            result.hotelName.location = content[key]
         } else if (key === "Rooms") {
-            result.rooms = content[key]
+            result.hotelName.rooms = content[key]
         } else if (key === "Value") {
-            result.value = content[key]
+            result.hotelName.value = content[key]
         } else if (key === "Cleanliness") {
-            result.cleanliness = content[key]
+            result.hotelName.cleanliness = content[key]
         } else if(key === "Service") {
-            result.service = content[key]
+            result.hotelName.service = content[key]
         } else if (key === "Sleep Quality") {
-            result.sleepQuality = content[key]
+            result.hotelName.sleepQuality = content[key]
         }
     })
 
-    await Hotel.create(result)
+    // await Hotel.create(result)
     // })
 };
 

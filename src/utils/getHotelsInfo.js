@@ -4,11 +4,11 @@ const { saveAPage } = require('./saveAPage');
 require('dotenv').config();
 
 const run = async () => {
-    let urls = fs.readFileSync("src/pages/urls/florianopolis.json");
+    let urls = fs.readFileSync("src/pages/urls/portoAlegre.json");
     urls = JSON.parse(urls);
     urls = urls.array;
 
-    const total = urls.slice(0, 3).length;
+    const total = urls.length;
     let count = 0;
     
     while(count < total) {
@@ -22,6 +22,7 @@ const run = async () => {
             'object',
             'texttrack',
             'stylesheet',
+            'google'
         ];
         const username = process.env.USERNAME_SCRAPE;
         // const password = "geoCode=us";
@@ -32,7 +33,7 @@ const run = async () => {
         const browser = await puppeteer.launch({
             args: [ `--proxy-server=http://${address}` ],
             acceptInsecureCerts: true,
-            headless: false
+            headless: true
         });
     
         const page = await browser.newPage();
@@ -53,7 +54,7 @@ const run = async () => {
             page, 
             endpoint: urls[count],
             folder: "hotels",
-            city: "florianopolis", 
+            city: "portoAlegre", 
         })
 
         await browser.close();
@@ -62,4 +63,4 @@ const run = async () => {
     }
 }
 
-await run();
+run();
