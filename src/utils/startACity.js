@@ -8,7 +8,7 @@ const { saveAPage } = require("./saveAPage");
 require('dotenv').config();
 
 // puppeteer.use(StealthPlugin());
-const startCity = async ({ endpoint }) => {
+const startCity = async ({ endpoint, city }) => {
   const blockedResourceTypes = [
     'beacon',
     'csp_report',
@@ -29,7 +29,7 @@ const startCity = async ({ endpoint }) => {
   const browser = await puppeteer.launch({
       args: [ `--proxy-server=http://${address}` ],
       acceptInsecureCerts: true,
-      headless: true
+      headless: true,
   });
 
   const page = await browser.newPage();
@@ -38,7 +38,7 @@ const startCity = async ({ endpoint }) => {
 
   page.on('request', request => {
     if (blockedResourceTypes.indexOf(request.resourceType()) !== -1) {
-      console.log(`Blocked type:${request.resourceType()} url:${request.url()}`)
+      // console.log(`Blocked type:${request.resourceType()} url:${request.url()}`)
       request.abort();
     } else {
       request.continue();
@@ -51,7 +51,7 @@ const startCity = async ({ endpoint }) => {
     page, 
     endpoint,
     folder: "cities",
-    city: "portoAlegre" 
+    city,
   });
 
   await page.screenshot({
@@ -62,20 +62,23 @@ const startCity = async ({ endpoint }) => {
   await browser.close();
 };
 
-(async() => {
+const run = async ({ 
+  city, 
+  endpoint 
+}) => {
   await startCity({
-    endpoint: "/Hotels-g303546-Porto_Alegre_State_of_Rio_Grande_do_Sul-Hotels.html"
+    endpoint,
+    city
   })
 
-  let total = 10000;
+  let total = 10000000;
   let counter = 0;
 
   while(total - counter > 30) {
     let data = "";
-    console.log('aqui');
 
     if(counter === 0) {
-      data = fs.readFileSync("src/pages/cities/portoAlegre/Hotels-g303546-Porto_Alegre_State_of_Rio_Grande_do_Sul-Hotels.txt");
+      data = fs.readFileSync(`src/pages/cities/${city}/${endpoint.replace(".html", ".txt")}`);
       data = data.toString();
       const dom = new JSDOM(data);
       
@@ -87,11 +90,24 @@ const startCity = async ({ endpoint }) => {
           });
       }
     }
+    
+    let nextPage = endpoint.split("-");
     counter += 30;
     console.log(total, counter);
 
+    nextPage = nextPage[0] + "-" + nextPage[1] + `-oa${counter}-` + nextPage[2] + "-" + nextPage[3];
+    console.log(nextPage);
+    
+
     await startCity({
-      endpoint: `/Hotels-g303546-oa${counter}-Porto_Alegre_State_of_Rio_Grande_do_Sul-Hotels.html`
-    }); 
+      endpoint: nextPage,
+      city
+    });
+
   }
-})();
+}
+
+run({
+  city: "saoPaulo", 
+  endpoint: "/Hotels-g303631-Sao_Paulo_State_of_Sao_Paulo-Hotels.html" 
+});

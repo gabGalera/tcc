@@ -3,8 +3,10 @@ const fs = require('fs');
 const { saveAPage } = require('./saveAPage');
 require('dotenv').config();
 
-const run = async () => {
-    let urls = fs.readFileSync("src/pages/urls/portoAlegre.json");
+const getHotelsInfo = async ({
+    city,
+}) => {
+    let urls = fs.readFileSync(`src/pages/urls/${city}.json`);
     urls = JSON.parse(urls);
     urls = urls.array;
 
@@ -41,12 +43,12 @@ const run = async () => {
         await page.setRequestInterception(true);
     
         page.on('request', request => {
-        if (blockedResourceTypes.indexOf(request.resourceType()) !== -1) {
-            console.log(`Blocked type:${request.resourceType()} url:${request.url()}`)
-            request.abort();
-        } else {
-            request.continue();
-        }
+            if (blockedResourceTypes.indexOf(request.resourceType()) !== -1) {
+                console.log(`Blocked type:${request.resourceType()} url:${request.url()}`)
+                request.abort();
+            } else {
+                request.continue();
+            }
         });
         await page.authenticate({username});
 
@@ -54,7 +56,7 @@ const run = async () => {
             page, 
             endpoint: urls[count],
             folder: "hotels",
-            city: "portoAlegre", 
+            city, 
         })
 
         await browser.close();
@@ -63,4 +65,6 @@ const run = async () => {
     }
 }
 
-run();
+getHotelsInfo({
+    city: "saoPaulo",
+});

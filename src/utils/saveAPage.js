@@ -29,7 +29,7 @@ const saveAPage = async ({
     if (err) console.log(err);
     else {
       console.log("File written successfully\n");
-      console.log("The written file has the following contents:");
+      // console.log("The written file has the following contents:");
     }
   });
 
